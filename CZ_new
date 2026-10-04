@@ -53,7 +53,7 @@ username_form = ''
 password_form = ''
 
 
-file_path =  "/Users/gast/Documents/biocheck/trabajos/2026/septiembre/translate/Czeck_dairy/Dairy_CZ_2026_IM_new_look_for Leonardo.docx"
+file_path =  "/Users/gast/Documents/biocheck/trabajos/2026/septiembre/translate/Czeck_dairy/Dairy_CZ_2026_IM_runApi for Leonardo_improved.docx"
 questionnaire_url = "https://apitest.biocheckgent.com/en/questionnaires/dairy-cattle-0/edit/questionnaire"
 
 driver = webdriver.Chrome()
@@ -240,12 +240,16 @@ def is_instruction_text(text):
 
         "vyberte jednu z možností",
         "vyberte jednu z možností.",
+        
 
         "vyberte všechny možnosti, které platí",
         "vyberte všechny možnosti, které platí.",
 
         "označte všechny možnosti, které platí",
         "označte všechny možnosti, které platí.",
+
+        "zaškrtněte všechny platné možnosti",
+        "zaškrtněte všechny platné možnosti.",
 
         # ---------------- English fallback ----------------
 
@@ -288,6 +292,9 @@ def is_checkbox_instruction_question(question_text):
 
         "označte všechny možnosti, které platí",
         "označte všechny možnosti, které platí.",
+
+        "zaškrtněte všechny platné možnosti",
+        "zaškrtněte všechny platné možnosti.",
 
         # English
         "mark all applicable options",
@@ -1003,12 +1010,14 @@ def extract_data(file_path):
 
 
             # -------------------------------------------------
-            # Preserve parenthetical text in the question
-            # -------------------------------------------------
-            # IMPORTANT: Do not remove markers such as
-            # (povinný dotaz). They are part of the Czech
-            # questionnaire text and must be uploaded together
-            # with the question.
+            # Remove Czech required-question marker from the question text.
+            # Example: "1. Otázka? (povinný dotaz)" -> "1. Otázka?"
+            text = re.sub(
+                r'\s*\(\s*povinný\s+dotaz\s*\)\s*',
+                ' ',
+                text,
+                flags=re.IGNORECASE
+            )
 
             text = normalize_text(
                 text
